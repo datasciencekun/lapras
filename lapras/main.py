@@ -42,11 +42,11 @@ print(c.export())
 
 # print(c.transform(train_selected, labels=True).iloc[0:10, :])
 
-# cols = list(lapras.quality(train_selected,target = target).reset_index()['index'])
-# for col in cols:
-#     if col != target:
-#         print(lapras.bin_stats(c.transform(train_selected[[col, target]], labels=True), col=col, target=target))
-#         lapras.bin_plot(c.transform(train_selected[[col,target]], labels=True), col=col, target=target)
+cols = list(lapras.quality(train_selected,target = target).reset_index()['index'])
+for col in cols:
+    if col != target:
+        print(lapras.bin_stats(c.transform(train_selected[[col, target]], labels=True), col=col, target=target))
+        lapras.bin_plot(c.transform(train_selected[[col,target]], labels=True), col=col, target=target)
 
 
 # 转换为WOE值
