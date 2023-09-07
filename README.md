@@ -1,6 +1,6 @@
 # LAPRAS
 
-[![PyPi version](https://img.shields.io/badge/pypi-V0.0.22-%3Cgreen%3E)](https://github.com/yhangang/lapras)
+[![PyPi version](https://img.shields.io/badge/pypi-V0.0.23-%3Cgreen%3E)](https://github.com/yhangang/lapras)
 [![Python version](https://img.shields.io/pypi/pyversions/toad.svg?style=flat-square)](https://github.com/yhangang/lapras)
 
 
@@ -1161,6 +1161,10 @@ prob = card.predict_prob(final_data[col])
 
 final_result['score'] = score
 final_result['prob'] = prob
+```
+
+
+```python
 print("card.intercept_:%s" % (card.intercept_))
 print("card.coef_:%s" % (card.coef_))
 card.get_params()['combiner']

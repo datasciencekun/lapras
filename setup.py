@@ -7,13 +7,13 @@ filepath = 'README.md'
 
 setup(
     name='lapras',
-    version='0.0.22',
+    version='0.0.23',
     packages = find_packages(),
 
     description='scorecard,logistical regression',
     long_description=open(filepath).read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/yhangang/lapras',
+    url='https://github.com/datasciencekun/lapras',
     author='Hayden Yang',
     author_email='yhangang@gmail.com',
     license='MIT',
@@ -45,7 +45,7 @@ setup(
     },
     # data_files=[('DealConfig.py'),('performance.py')],
 
-    keywords=['scorecard', 'deep learning', 'wide&deep', 'logistical regression'],
+    keywords=['scorecard', 'deep learning', 'data science', 'logistical regression'],
     entry_points={
 
     },
