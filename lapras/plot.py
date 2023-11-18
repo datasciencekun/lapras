@@ -8,6 +8,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.colors as mcolors
+import plotly
+import plotly.graph_objects as go
+import plotly.figure_factory as ff
+import plotly.express as px
+from plotly.subplots import make_subplots
 from .utils.func import to_ndarray
 from .stats import probability
 
@@ -129,6 +134,89 @@ def score_plot(frame, score='score', target='target',score_bond=None, **kwargs):
     # 画图显示 区间数量 区间坏账率
     plt_show(x, ticks, y_count, y_rate, **kwargs)
 
+# # deprecated
+# def plt_show2(x, ticks, y_count, y_rate, title="Score Distribute And Y Label Rates", x_label="Score Boundaries",
+#              y_label_left="Sample Counts", y_label_right="Y Label Rates", fontsize=15, output=False):
+#     '''
+#     画 柱状图 和 折线图
+#     :param x: 区间分段 1,2,3,4
+#     :param ticks: 区间名称['[300, 400)', '[400, 500)',  '[500, 1000)']
+#     :param y_count: 区间 数量， 表示评分在此区间内的样本数量
+#     :param y_rate: 区间 坏账率
+#     :param title: 图表标题
+#     :param x_label: 横坐标标题
+#     :param y_label_left: 左边从坐标标题
+#     :param y_label_right: 右边从坐标标题
+#     :param fontsize: 字体大小
+#     '''
+#     # 设置字体、图形样式
+#     # sns.set_style("whitegrid")
+#     # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+#     # matplotlib.rcParams['font.family'] = 'sans-serif'
+#     # matplotlib.rcParams['axes.unicode_minus'] = False
+#     matplotlib.fontsize = fontsize
+#
+#
+#
+#     # 是否显示折线图
+#     line_flag = True
+#
+#     y1 = y_count
+#     y2 = y_rate
+#     # 设置图形大小
+#     plt.rcParams['figure.figsize'] = (18.0, 9.0)
+#
+#     fig = plt.figure()
+#
+#     # 画柱子
+#     ax1 = fig.add_subplot(111)
+#     # alpha透明度， edgecolor边框颜色，color柱子颜色 linewidth width 配合去掉柱子间距
+#     ax1.bar(x, y1, alpha=0.8, edgecolor='k', color='#3399FF',linewidth=1, width =1)
+#     # 获取 y 最大值 最高位 + 1 的数值 比如 201取300，320取400，1800取2000
+#     y1_lim = int(str(int(str(max(y1))[0]) + 1) + '0' * (len(str(max(y1))) - 1))
+#
+#     # 设置 y轴 边界
+#     ax1.set_ylim([0, y1_lim])
+#     # 设置 y轴 标题
+#     ax1.set_ylabel(y_label_left, fontsize='15')
+#     ax1.set_xlabel(x_label,fontsize='15')
+#     # 将分值标注在图形上
+#     for x_i, y_i in  zip(x, y1):
+#         ax1.text(x_i, y_i + y1_lim/20, str(y_i), ha='center', va='top', fontsize=13, rotation=0)
+#
+#     # 设置标题
+#     ax1.set_title(title, fontsize='20')
+#     plt.yticks(fontsize=15)
+#     # plt.xticks(x, y)
+#     plt.xticks(fontsize=12)
+#
+#     # 画折线图
+#     if line_flag:
+#         ax2 = ax1.twinx()  # 这个很重要噢
+#         ax2.plot(x, y2, 'r', marker='*', ms=0)
+#
+#         # ax2.set_xlim([-0.5, 3.5])
+#         try:
+#             y2_lim = (int(max(y2) * 10) + 1) / 10
+#         except:
+#             y2_lim = 1
+#         ax2.set_ylim([0, y2_lim])
+#         ax2.set_ylabel(y_label_right, fontsize='15')
+#         ax2.set_xlabel(x_label,fontsize='15')
+#         for x_i, y_i in  zip(x, y2):
+#             ax2.text(x_i, y_i+y2_lim/20 , '%.2f%%'%(y_i *100), ha='center', va='top', fontsize=13, rotation=0)
+#     plt.yticks(fontsize=15)
+#     plt.xticks(x, ticks)
+#     plt.xticks(fontsize=15)
+#
+#     # 是否显示网格
+#     plt.grid(False)
+#
+#     # 保存图片 dpi为图像分辨率
+#     # plt.savefig('分数分布及区间坏账率.png', dpi=600, bbox_inches='tight')
+#     # 显示图片
+#     plt.show()
+
 
 def plt_show(x, ticks, y_count, y_rate, title="Score Distribute And Y Label Rates", x_label="Score Boundaries",
              y_label_left="Sample Counts", y_label_right="Y Label Rates", fontsize=15, output=False):
@@ -144,73 +232,54 @@ def plt_show(x, ticks, y_count, y_rate, title="Score Distribute And Y Label Rate
     :param y_label_right: 右边从坐标标题
     :param fontsize: 字体大小
     '''
-    # 设置字体、图形样式
-    # sns.set_style("whitegrid")
-    # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
-    # matplotlib.rcParams['font.family'] = 'sans-serif'
-    # matplotlib.rcParams['axes.unicode_minus'] = False
-    matplotlib.fontsize = fontsize
 
+    fig = make_subplots(specs=[[{'secondary_y': True}]])
 
+    # Add traces
+    fig.add_trace(go.Bar(
+        x = ticks,
+        y = y_count,
+        name='sample counts',
+        text=y_count,
+        textposition='auto', # ['inside', 'outside', 'auto', 'none']
+        texttemplate='%{text:.4s}'
+    ))
+    fig.add_trace(go.Scatter(
+        x = ticks,
+        y = y_rate,
+        mode='markers + lines + text',
+        name='y label rate',
+        text=y_rate,
+        textposition='top left',
+        texttemplate='%{text:.4f}%'
+    ),
+        secondary_y=True,
+    )
 
-    # 是否显示折线图
-    line_flag = True
+    fig.update_layout(
+        title = dict(
+            text=title,
+            y=1,
+            x=0.5,
+        ),
+        xaxis = dict(
+            title=x_label,
+        ),
+        yaxis = dict(
+            title=y_label_left,
+        ),
+        yaxis2 = dict(
+            title=y_label_right,
+        ),
+        legend = dict(
+            y=1.1,
+            x=0.,
+        )
+    )
 
-    y1 = y_count
-    y2 = y_rate
-    # 设置图形大小
-    plt.rcParams['figure.figsize'] = (18.0, 9.0)
+    fig.show()
+    # plotly.offline.plot(fig)
 
-    fig = plt.figure()
-
-    # 画柱子
-    ax1 = fig.add_subplot(111)
-    # alpha透明度， edgecolor边框颜色，color柱子颜色 linewidth width 配合去掉柱子间距
-    ax1.bar(x, y1, alpha=0.8, edgecolor='k', color='#3399FF',linewidth=1, width =1)
-    # 获取 y 最大值 最高位 + 1 的数值 比如 201取300，320取400，1800取2000
-    y1_lim = int(str(int(str(max(y1))[0]) + 1) + '0' * (len(str(max(y1))) - 1))
-
-    # 设置 y轴 边界
-    ax1.set_ylim([0, y1_lim])
-    # 设置 y轴 标题
-    ax1.set_ylabel(y_label_left, fontsize='15')
-    ax1.set_xlabel(x_label,fontsize='15')
-    # 将分值标注在图形上
-    for x_i, y_i in  zip(x, y1):
-        ax1.text(x_i, y_i + y1_lim/20, str(y_i), ha='center', va='top', fontsize=13, rotation=0)
-
-    # 设置标题
-    ax1.set_title(title, fontsize='20')
-    plt.yticks(fontsize=15)
-    # plt.xticks(x, y)
-    plt.xticks(fontsize=12)
-
-    # 画折线图
-    if line_flag:
-        ax2 = ax1.twinx()  # 这个很重要噢
-        ax2.plot(x, y2, 'r', marker='*', ms=0)
-
-        # ax2.set_xlim([-0.5, 3.5])
-        try:
-            y2_lim = (int(max(y2) * 10) + 1) / 10
-        except:
-            y2_lim = 1
-        ax2.set_ylim([0, y2_lim])
-        ax2.set_ylabel(y_label_right, fontsize='15')
-        ax2.set_xlabel(x_label,fontsize='15')
-        for x_i, y_i in  zip(x, y2):
-            ax2.text(x_i, y_i+y2_lim/20 , '%.2f%%'%(y_i *100), ha='center', va='top', fontsize=13, rotation=0)
-    plt.yticks(fontsize=15)
-    plt.xticks(x, ticks)
-    plt.xticks(fontsize=15)
-
-    # 是否显示网格
-    plt.grid(False)
-
-    # 保存图片 dpi为图像分辨率
-    # plt.savefig('分数分布及区间坏账率.png', dpi=600, bbox_inches='tight')
-    # 显示图片
-    plt.show()
 
 
 def radar_plot(data=[], title='Radar Graph', radar_labels=['dimension1','dimension2','dimension3','dimension4', 'dimension5'],

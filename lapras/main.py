@@ -4,6 +4,7 @@ import pandas as pd
 import lapras
 import numpy as np
 
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.options.display.max_colwidth = 100
@@ -15,7 +16,17 @@ lapras项目主流程测试
 
 to_drop = ['id']
 target = 'bad'
-df = pd.read_csv('data/demo.csv',encoding="utf-8")
+df = pd.read_csv('data/demo.csv', encoding="utf-8")
+
+# feature_list = ['age', 'education', 'score']
+# exclude_list = ['id']
+# bins_map = {'age':[-1,20,30,99]}
+# data_type_map = {'education':'discrete'}
+# labels_map = {'education':{'1.0':'111','2.0':'222','3.0':'333','4.0':'444','5.0':'555'}}
+# lapras.eda(df,feature_list=feature_list , exclude_list = exclude_list, bins_map=bins_map,
+#            labels_map=labels_map, data_type_map=data_type_map, max_bins=6)
+# lapras.eda(df)
+
 # print(lapras.detect(df.drop(to_drop,axis=1)))
 iv_df = lapras.quality(df.drop(to_drop,axis=1),target = target)
 print(iv_df)
@@ -79,7 +90,7 @@ final_data['prob'] = prob
 # print(final_data[['score', 'prob']].iloc[:10,:])
 #输出标准评分卡
 print(card.export())
-lapras.perform(prob,final_data[target])
+# lapras.perform(prob,final_data[target])
 score_bond = [305, 460, 490, 520, 550, 580, 610, 640, 670, 700, 730, 760, 790, 820, 850, 880, 999]
 lapras.score_plot(final_data,score='score', target=target, output=True)
 print(lapras.LIFT(prob,final_data[target]))

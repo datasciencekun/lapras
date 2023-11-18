@@ -1,15 +1,5 @@
 #!/usr/bin/python
 
-"""Command line tools for detecting csv data
-
-Team: ESC
-
-Examples:
-
-    python detector.py -i xxx.csv -o report.csv
-
-"""
-
 import pandas as pd
 
 def getTopValues(series, top = 5, reverse = False):

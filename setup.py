@@ -28,6 +28,7 @@ setup(
         # 'tensorflow >= 2.2.0',
         # 'hyperopt >= 0.2.7',
         # 'pickle >= 4.0',
+        # 'plotly >= 5.9.0',
     ],
     classifiers=[
         'Operating System :: POSIX',

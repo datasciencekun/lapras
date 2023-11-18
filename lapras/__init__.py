@@ -1,6 +1,7 @@
 # coding:utf-8
 
 from .detector import detect
+from .eda import eda
 from .stats import quality, IV, VIF, WOE, bin_stats
 from .selection import select, stepwise
 from .transform import Combiner, WOETransformer

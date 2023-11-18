@@ -14,6 +14,7 @@ Let's get started.
 
 1.Exploratory Data Analysis
 lapras.detect()
+lapras.eda()
 lapras.quality()
 lapras.IV()
 lapras.VIF()
@@ -69,6 +70,7 @@ install_requires = [
 'tensorflow >= 2.2.0',
 'hyperopt >= 0.2.7',
 'pickle >= 4.0',
+'plotly >= 5.9.0',
 ]
 
 ## Documents
@@ -267,6 +269,18 @@ lapras.detect(train_df).sort_values("missing")
   </tbody>
 </table>
 </div>
+
+```python
+# Exploratory Data Analysis
+# feature_list = ['age', 'education', 'score']
+# exclude_list = ['id']
+# bins_map = {'age':[-1,20,30,99]}
+# data_type_map = {'education':'discrete'}
+# labels_map = {'education':{'1.0':'111','2.0':'222','3.0':'333','4.0':'444','5.0':'555'}}
+# lapras.eda(df,feature_list=feature_list , exclude_list = exclude_list, bins_map=bins_map,
+#            labels_map=labels_map, data_type_map=data_type_map, max_bins=6)
+lapras.eda(df)
+```
 
 ```python
 # Calculate IV value of features（Calculate by default decision tree binning）
@@ -1120,7 +1134,7 @@ final_data
 # pdo=40,rate=2 If the base_odds decrease by half, the corresponding pdo will increase by 40, these are the default parameters
 # combiner=None Combiner, input the fitted object
 # transfer=None WOETransformer, input the fitted object
-
+# model_type='lr' enumerate:'lr':sklearn LR   'ols':statsmodels ols
 # ScoreCard.fit()：
 # X=None WOE value
 # y=None Y label
